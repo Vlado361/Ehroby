@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eSPOMIENKA | Digitálne spomienky, ktoré pretrvajú</title>
+    
+    <!-- Meta Tags -->
+    <meta name="description" content="eSPOMIENKA je moderný spôsob, ako uchovať a zdieľať spomienky na zosnulých. Pomocou jednoduchého QR kódu môžu návštevníci hrobu okamžite pristúpiť k fotografiám, hudbe a textom.">
+    <meta name="keywords" content="eSPOMIENKA, digitálna spomienka, QR kód na hrob, spomienková stránka, pamiatka na zosnulých, digitálne dedičstvo, online kondolencia">
+    <meta name="author" content="eSPOMIENKA">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#327881">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.espomienka.sk/">
+    <meta property="og:title" content="eSPOMIENKA | Digitálne spomienky, ktoré pretrvajú">
+    <meta property="og:description" content="Zachovajte spomienky na svojich blízkych navždy. Moderný spôsob, ako uchovať a zdieľať spomienky na zosnulých cez QR kód.">
+    <meta property="og:image" content="https://storage.googleapis.com/espomienka/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.espomienka.sk/">
+    <meta property="twitter:title" content="eSPOMIENKA | Digitálne spomienky, ktoré pretrvajú">
+    <meta property="twitter:description" content="Zachovajte spomienky na svojich blízkych navždy. Moderný spôsob, ako uchovať a zdieľať spomienky na zosnulých cez QR kód.">
+    <meta property="twitter:image" content="https://storage.googleapis.com/espomienka/logo.png">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="https://storage.googleapis.com/espomienka/logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://storage.googleapis.com/espomienka/logo36.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://storage.googleapis.com/espomienka/logo36.png">
+    <link rel="shortcut icon" href="https://storage.googleapis.com/espomienka/logo36.png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- AOS (Animate on Scroll) Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Custom Styles based on ehroby.sk color scheme */
+        :root {
+            --color-primary: #327881; /* Main Teal */
+            --color-primary-dark: #2a656c;
+            --color-secondary: #5e2e60; /* Accent Purple */
+            --color-secondary-dark: #4d254f;
+            --color-dark-text: #1e293b; /* Slate 800 */
+            --color-headings: #0f172a; /* Slate 900 */
+            --color-background: #f8fafc; /* Slate 50 */
+            --color-light-text: #475569; /* Slate 600 */
+        }
+        
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-dark-text);
+            font-size: 1.1rem;
+            line-height: 1.7;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--color-headings);
+        }
+
+        .hero-carousel {
+            position: relative;
+            height: 75vh;
+            min-height: 500px;
+            max-height: 800px;
+            width: 100%;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            z-index: 1;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .section-title {
+            @apply text-4xl md:text-5xl font-bold mb-12 text-center;
+        }
+        
+        /* New Rounded Button Style */
+        .btn {
+            @apply inline-block w-auto text-center px-8 py-3 rounded-full font-semibold text-white text-lg transition-all duration-300;
+        }
+        .btn-form {
+             @apply w-full;
+        }
+        .btn:hover {
+            @apply -translate-y-0.5 shadow-lg;
+            filter: brightness(1.1);
+        }
+        .btn:active {
+             @apply -translate-y-0 shadow-sm;
+        }
+
+        .btn-primary {
+             background-color: var(--color-primary);
+        }
+        
+        .btn-secondary {
+            background-color: var(--color-secondary);
+        }
+        
+        .pricing-card {
+            @apply bg-white p-8 rounded-xl border border-slate-200 flex flex-col h-full;
+        }
+
+        .pricing-card.highlight {
+            border: 2px solid var(--color-primary);
+        }
+
+        .highlight-badge {
+            background-color: var(--color-primary);
+            @apply absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white px-5 py-1.5 rounded-full text-base font-semibold;
+        }
+        
+        .faq-item {
+            @apply bg-white p-5 rounded-lg border border-slate-200;
+        }
+        .faq-question {
+            @apply font-semibold text-xl cursor-pointer w-full text-left;
+        }
+        .faq-answer {
+            @apply mt-3 text-slate-600;
+        }
+        .nav-link {
+            color: var(--color-dark-text);
+            @apply hover:text-black transition-colors font-semibold;
+        }
+
+        .form-input {
+            @apply w-full p-4 text-lg border border-slate-300 rounded-lg focus:outline-none bg-white;
+        }
+        .form-input:focus {
+             border-color: var(--color-primary);
+             box-shadow: 0 0 0 2px rgba(50, 120, 129, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-3">
+                <img src="https://storage.googleapis.com/espomienka/logo36.png" alt="eSPOMIENKA Logo" class="h-10 w-auto" onerror="this.onerror=null;this.src='https://placehold.co/36x36/f1f5f9/334155?text=E';">
+                <span class="text-2xl font-bold text-slate-900" style="font-family: 'Playfair Display', serif;">eSPOMIENKA</span>
+            </a>
+            <div class="hidden md:flex space-x-10 items-center">
+                <a href="#ako-to-funguje" class="nav-link">Ako to funguje</a>
+                <a href="#cennik" class="nav-link">Cenník</a>
+                <a href="#objednat" class="nav-link">Kontakt</a>
+                <a href="#objednat" class="px-6 py-2 rounded-md font-semibold text-white transition-colors" style="background-color: var(--color-primary);" onmouseover="this.style.backgroundColor='var(--color-primary-dark)'" onmouseout="this.style.backgroundColor='var(--color-primary)'">Objednať</a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-slate-800 focus:outline-none">
+                    <i class="fas fa-bars fa-lg"></i>
+                </button>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white px-6 pt-2 pb-4 border-t border-slate-200">
+            <a href="#ako-to-funguje" class="block py-3 text-lg nav-link">Ako to funguje</a>
+            <a href="#cennik" class="block py-3 text-lg nav-link">Cenník</a>
+            <a href="#objednat" class="block py-3 text-lg nav-link">Kontakt</a>
+            <a href="#objednat" class="block mt-4 text-center px-6 py-3 rounded-md font-semibold text-white transition-colors" style="background-color: var(--color-primary);" onmouseover="this.style.backgroundColor='var(--color-primary-dark)'" onmouseout="this.style.backgroundColor='var(--color-primary)'">Objednať</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section with Carousel -->
+        <section class="hero-carousel">
+            <div id="hero-slider">
+                <div class="hero-slide active" style="background-image: url('https://storage.googleapis.com/espomienka/happy-young-family-mother-father-two-children-son-nature-having-fun.jpg');"></div>
+                <div class="hero-slide" style="background-image: url('https://storage.googleapis.com/espomienka/family-walking-field-nature-togetherness-concept.jpg');"></div>
+                <div class="hero-slide" style="background-image: url('https://storage.googleapis.com/espomienka/happy-woman-black-white-tone.jpg');"></div>
+            </div>
+            <div class="hero-overlay">
+                <div class="container mx-auto px-6 text-center text-white">
+                    <h1 class="text-5xl md:text-7xl font-bold mb-6 text-white" data-aos="fade-up">Digitálne spomienky, ktoré pretrvajú</h1>
+                    <p class="text-xl md:text-2xl max-w-3xl mx-auto mb-10" data-aos="fade-up" data-aos-delay="200">Zachovajte spomienky na svojich blízkych navždy. Dôstojne a jednoducho.</p>
+                    <a href="#cennik" class="inline-block px-10 py-4 rounded-lg font-bold text-slate-900 bg-white hover:bg-slate-200 transition-colors text-xl" data-aos="fade-up" data-aos-delay="400">Zobraziť balíčky</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ako to funguje Section -->
+        <section id="ako-to-funguje" class="py-20 md:py-28 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title" data-aos="fade-up">🎯 Ako to funguje</h2>
+                <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-10 text-center">
+                    <div class="step-item p-4" data-aos="fade-up" data-aos-delay="100">
+                        <div class="flex justify-center items-center mb-5 text-5xl" style="color: var(--color-primary);"><i class="fas fa-box-open"></i></div>
+                        <h3 class="text-2xl font-semibold mb-2">1. Objednávka</h3>
+                        <p style="color: var(--color-light-text);">Vyberiete si balíček a odošlete objednávku.</p>
+                    </div>
+                    <div class="step-item p-4" data-aos="fade-up" data-aos-delay="200">
+                        <div class="flex justify-center items-center mb-5 text-5xl" style="color: var(--color-primary);"><i class="fas fa-qrcode"></i></div>
+                        <h3 class="text-2xl font-semibold mb-2">2. Príprava</h3>
+                        <p style="color: var(--color-light-text);">Pošleme vám QR kód a prístup do aplikácie.</p>
+                    </div>
+                    <div class="step-item p-4" data-aos="fade-up" data-aos-delay="300">
+                        <div class="flex justify-center items-center mb-5 text-5xl" style="color: var(--color-primary);"><i class="fas fa-upload"></i></div>
+                        <h3 class="text-2xl font-semibold mb-2">3. Obsah</h3>
+                        <p style="color: var(--color-light-text);">Sami nahráte fotografie, hudbu a texty.</p>
+                    </div>
+                    <div class="step-item p-4" data-aos="fade-up" data-aos-delay="400">
+                        <div class="flex justify-center items-center mb-5 text-5xl" style="color: var(--color-primary);"><i class="fas fa-map-marker-alt"></i></div>
+                        <h3 class="text-2xl font-semibold mb-2">4. Umiestnenie</h3>
+                        <p style="color: var(--color-light-text);">Nalepíte QR kód na náhrobok alebo pomník.</p>
+                    </div>
+                    <div class="step-item p-4" data-aos="fade-up" data-aos-delay="500">
+                        <div class="flex justify-center items-center mb-5 text-5xl" style="color: var(--color-primary);"><i class="fas fa-mobile-alt"></i></div>
+                        <h3 class="text-2xl font-semibold mb-2">5. Spomienka</h3>
+                        <p style="color: var(--color-light-text);">Po naskenovaní sa zobrazí digitálna spomienka.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QR Code Demo Section -->
+        <section id="qr-demo" class="py-20 md:py-28" style="background-color: var(--color-background);">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title" data-aos="fade-up">Vyskúšajte si to naživo</h2>
+                <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+                    <div class="text-center md:text-left" data-aos="fade-right">
+                        <h3 class="text-3xl font-bold mb-4">Ako naskenovať QR kód?</h3>
+                        <p class="text-lg text-slate-600 mb-6">Je to jednoduchšie, ako si myslíte. Nepotrebujete žiadnu špeciálnu aplikáciu.</p>
+                        <ol class="space-y-4 text-left">
+                            <li class="flex items-start"><div class="flex-shrink-0 mr-4 mt-1 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold" style="background-color: var(--color-primary);">1</div><span class="text-lg">Otvorte aplikáciu <strong>Fotoaparát</strong> na svojom mobilnom telefóne.</span></li>
+                            <li class="flex items-start"><div class="flex-shrink-0 mr-4 mt-1 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold" style="background-color: var(--color-primary);">2</div><span class="text-lg">Namierte telefón na QR kód, ako keby ste ho chceli odfotiť.</span></li>
+                            <li class="flex items-start"><div class="flex-shrink-0 mr-4 mt-1 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold" style="background-color: var(--color-primary);">3</div><span class="text-lg">Na obrazovke sa objaví odkaz – <strong>kliknite naň</strong> a spomienka sa ihneď zobrazí.</span></li>
+                        </ol>
+                    </div>
+                    <div class="flex justify-center" data-aos="fade-left">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://app.ehroby.sk/e/0ab9e0914dbbc5c60febd14283d9817e98fbaf0e" alt="Vzorovy QR kod eSPOMIENKA" class="rounded-lg shadow-xl max-w-xs w-full">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cenove balicky Section -->
+        <section id="cennik" class="py-20 md:py-28 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title" data-aos="fade-up">💰 Cenové balíčky</h2>
+                <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                    <!-- 1 Year Package -->
+                    <div class="pricing-card" data-aos="zoom-in-up" data-aos-delay="200">
+                        <h3 class="text-3xl font-bold text-center mb-2">🌱 Základný</h3>
+                        <p class="text-5xl font-bold text-center mb-6">35€<span class="text-xl font-semibold" style="color: var(--color-light-text);"> / rok</span></p>
+                        <ul class="space-y-4 mb-8 flex-grow text-lg">
+                            <li class="flex items-start"><i class="fas fa-check w-6 mt-1 mr-2" style="color: var(--color-primary);"></i><span>QR kód + hosting na 1 rok</span></li>
+                            <li class="flex items-start"><i class="fas fa-check w-6 mt-1 mr-2" style="color: var(--color-primary);"></i><span>Až 10 fotografií</span></li>
+                            <li class="flex items-start"><i class="fas fa-check w-6 mt-1 mr-2" style="color: var(--color-primary);"></i><span>1 obľúbená pieseň</span></li>
+                            <li class="flex items-start"><i class="fas fa-check w-6 mt-1 mr-2" style="color: var(--color-primary);"></i><span>Spomienkový text</span></li>
+                        </ul>
+                        <a href="#objednat" class="btn btn-secondary">Vybrať balíček</a>
+                    </div>
+                    <!-- 5 Year Package (Highlight) -->
+                    <div class="pricing-card highlight relative -mt-0 lg:-mt-4" data-aos="zoom-in-up">
+                         <div class="highlight-badge">Najlepšia hodnota</div>
+                        <h3 class="text-3xl font-bold text-center mb-2">💎 Rodinný</h3>
+                        <p class="text-5xl font-bold text-center mb-6">95€<span class="text-xl font-semibold" style="color: var(--color-light-text);"> / 5 rokov</span></p>
+                        <ul class="space-y-4 mb-8 flex-grow text-lg">
+                            <li class="flex items-start"><i class="fas fa-check w-6 mt-1 mr-2" style="color: var(--color-primary);"></i><span class="font-bold">Všetko zo základného balíčka</span></li>
+                            <li class="flex items-start"><i class="fas fa-check w-6 mt-1 mr-2" style="color: var(--color-primary);"></i><span>Hosting na 5 rokov</span></li>
+                            <li class="flex items-start"><i class="fas fa-check w-6 mt-1 mr-2" style="color: var(--color-primary);"></i><span class="font-bold" style="color: var(--color-headings);">Ušetríte 80€</span></li>
+                        </ul>
+                        <a href="#objednat" class="btn btn-primary">Vybrať balíček</a>
+                    </div>
+                    <!-- 3 Year Package -->
+                    <div class="pricing-card" data-aos="zoom-in-up" data-aos-delay="200">
+                        <h3 class="text-3xl font-bold text-center mb-2">🌟 Rozšírený</h3>
+                        <p class="text-5xl font-bold text-center mb-6">65€<span class="text-xl font-semibold" style="color: var(--color-light-text);"> / 3 roky</span></p>
+                        <ul class="space-y-4 mb-8 flex-grow text-lg">
+                            <li class="flex items-start"><i class="fas fa-check w-6 mt-1 mr-2" style="color: var(--color-primary);"></i><span class="font-bold">Všetko zo základného balíčka</span></li>
+                            <li class="flex items-start"><i class="fas fa-check w-6 mt-1 mr-2" style="color: var(--color-primary);"></i><span>Hosting na 3 roky</span></li>
+                            <li class="flex items-start"><i class="fas fa-check w-6 mt-1 mr-2" style="color: var(--color-primary);"></i><span class="font-bold" style="color: var(--color-headings);">Ušetríte 40€</span></li>
+                        </ul>
+                        <a href="#objednat" class="btn btn-secondary">Vybrať balíček</a>
+                    </div>
+                </div>
+                 <!-- Fyzicke QR kody -->
+                 <div class="mt-20 text-center" data-aos="fade-up">
+                    <h3 class="text-3xl font-bold text-center mb-8">🛡️ Fyzické prevedenie QR kódu <span style="color: var(--color-light-text);">(voliteľné)</span></h3>
+                    <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8">
+                        <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                            <i class="fas fa-sticky-note text-4xl mb-4 text-slate-600"></i>
+                            <p class="font-bold text-xl">Samolepka</p>
+                            <p class="text-sm text-slate-500 mb-3">(odolná voči počasiu)</p>
+                            <p class="font-bold text-2xl">+12€</p>
+                        </div>
+                        <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                            <i class="fas fa-id-card text-4xl mb-4 text-slate-600"></i>
+                            <p class="font-bold text-xl">Plastová plaketka</p>
+                             <p class="text-sm text-slate-500 mb-3">(elegantný plast)</p>
+                            <p class="font-bold text-2xl">+25€</p>
+                        </div>
+                        <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                            <i class="fas fa-shield-alt text-4xl mb-4 text-slate-600"></i>
+                            <p class="font-bold text-xl">Kovová plaketka</p>
+                             <p class="text-sm text-slate-500 mb-3">(ušľachtilá oceľ)</p>
+                            <p class="font-bold text-2xl">+45€</p>
+                        </div>
+                    </div>
+                    <p class="mt-8 text-slate-600 italic">Po dohode vám vieme QR kód na hrobové miesto umiestniť aj my.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Custom Solution Section -->
+        <section id="custom-solution" class="py-20 md:py-28" style="background-color: var(--color-secondary);">
+            <div class="container mx-auto px-6 text-center text-white" data-aos="fade-in">
+                <i class="fas fa-microphone-alt text-5xl mb-6"></i>
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 text-white">Riešenie na mieru</h2>
+                <p class="text-xl max-w-3xl mx-auto mb-8 text-slate-200">Pre najnáročnejších klientov ponúkame exkluzívnu službu. Vytvoríme digitálnu spomienku priamo na mieste, spolu s vami, a obohatíme ju o profesionálny voiceover – nahovorený životný príbeh alebo odkaz.</p>
+                <p class="text-2xl font-bold mb-8">Cena na vyžiadanie</p>
+                <a href="#objednat" class="btn bg-white text-slate-900 hover:bg-slate-200">Dopytovať riešenie na mieru</a>
+            </div>
+        </section>
+        
+        <!-- Preco eSPOMIENKA Section -->
+        <section id="preco-espomienka" class="py-20 md:py-28" style="background-color: var(--color-background);">
+             <div class="container mx-auto px-6">
+                <h2 class="section-title" data-aos="fade-up">⭐ Prečo eSPOMIENKA?</h2>
+                <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <div class="p-6" data-aos="fade-up">
+                        <div class="flex items-center mb-4"><i class="fas fa-rocket text-3xl mr-4" style="color: var(--color-primary);"></i><h3 class="text-2xl font-bold">Jednoduché a rýchle</h3></div>
+                        <p style="color: var(--color-light-text);">Žiadne zložité registrácie, všetko máte pod vlastnou kontrolou. Spustené do niekoľkých minút.</p>
+                    </div>
+                     <div class="p-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="flex items-center mb-4"><i class="fas fa-code text-3xl mr-4" style="color: var(--color-primary);"></i><h3 class="text-2xl font-bold">Vlastná správa</h3></div>
+                        <p style="color: var(--color-light-text);">Cez jednoduchú aplikáciu môžete pridávať a meniť obsah kedykoľvek potrebujete.</p>
+                    </div>
+                    <div class="p-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="flex items-center mb-4"><i class="fas fa-flag text-3xl mr-4" style="color: var(--color-primary);"></i><h3 class="text-2xl font-bold">Slovenské riešenie</h3></div>
+                        <p style="color: var(--color-light-text);">Zákaznícka podpora v slovenčine a známe platobné metódy.</p>
+                    </div>
+                    <div class="p-6" data-aos="fade-up">
+                        <div class="flex items-center mb-4"><i class="fas fa-mobile-screen-button text-3xl mr-4" style="color: var(--color-primary);"></i><h3 class="text-2xl font-bold">Moderné a elegantné</h3></div>
+                        <p style="color: var(--color-light-text);">Krásne mobilné stránky s rýchlym načítaním fungujú na všetkých smartfónoch.</p>
+                    </div>
+                     <div class="p-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="flex items-center mb-4"><i class="fas fa-hand-holding-dollar text-3xl mr-4" style="color: var(--color-primary);"></i><h3 class="text-2xl font-bold">Žiadne skryté poplatky</h3></div>
+                        <p style="color: var(--color-light-text);">Ceny sú transparentné a konečné. Žiadne mesačné poplatky ani limity návštev.</p>
+                    </div>
+                    <div class="p-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="flex items-center mb-4"><i class="fas fa-shield-heart text-3xl mr-4" style="color: var(--color-primary);"></i><h3 class="text-2xl font-bold">Bezpečné a súkromné</h3></div>
+                        <p style="color: var(--color-light-text);">Všetky vaše dáta sú chránené a bezpečne uložené na serveroch v EÚ.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kontakt & Objednavka Section -->
+        <section id="objednat" class="py-20 md:py-28 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title" data-aos="fade-up">✍️ Objednávka a Kontakt</h2>
+                <div class="max-w-5xl mx-auto" data-aos="fade-up">
+                    <div class="grid lg:grid-cols-2 gap-12">
+                        <!-- Formulár -->
+                        <div class="p-8 rounded-xl" style="background-color: var(--color-background);">
+                             <h3 class="text-3xl font-bold mb-6">Objednávkový formulár</h3>
+                            <form action="#" method="POST">
+                                <div class="space-y-5">
+                                    <input type="text" placeholder="Vaše meno a priezvisko" required class="form-input">
+                                    <input type="email" placeholder="Váš email" required class="form-input">
+                                    <select required class="form-input">
+                                        <option value="" disabled selected>Zvoľte si balíček...</option>
+                                        <option value="zakladny">Základný balíček (35€ / rok)</option>
+                                        <option value="rozsireny">Rozšírený balíček (65€ / 3 roky)</option>
+                                        <option value="rodinny">Rodinný balíček (95€ / 5 rokov)</option>
+                                        <option value="custom">Riešenie na mieru (cena na vyžiadanie)</option>
+                                    </select>
+                                    <textarea placeholder="Vaša správa (voliteľné)" rows="4" class="form-input"></textarea>
+                                    <button type="submit" class="btn btn-primary btn-form">Odoslať objednávku</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- Kontaktné info -->
+                        <div class="pt-8">
+                            <h3 class="text-3xl font-bold mb-6">Máte otázky?</h3>
+                            <p class="mb-8 text-lg text-slate-600">V prípade nejasností alebo špeciálnych požiadaviek nás neváhajte kontaktovať. Radi vám so všetkým pomôžeme.</p>
+                            <div class="space-y-5 text-lg">
+                                <p class="flex items-center"><i class="fas fa-envelope w-8 mr-3" style="color: var(--color-primary);"></i><a href="mailto:info@ehroby.sk" class="text-slate-800 hover:text-black">info@ehroby.sk</a></p>
+                                <p class="flex items-center"><i class="fas fa-phone w-8 mr-3" style="color: var(--color-primary);"></i><a href="tel:+421951553464" class="text-slate-800 hover:text-black">0951 553 464</a></p>
+                                <p class="flex items-start"><i class="fab fa-stripe-s w-8 mt-1 mr-3 text-2xl" style="color: var(--color-primary);"></i><span class="text-slate-800">Platba kartou (Stripe), Bankový prevod</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="py-20 md:py-28" style="background-color: var(--color-background);">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title" data-aos="fade-up">❓ Často kladené otázky</h2>
+                <div id="faq-container" class="max-w-3xl mx-auto space-y-4" data-aos="fade-up">
+                    <div class="faq-item">
+                        <button class="faq-question flex justify-between items-center w-full">
+                            <span>Je to ťažké nastaviť?</span>
+                            <i class="fas fa-chevron-down transition-transform"></i>
+                        </button>
+                        <div class="faq-answer hidden">Nie! Pošleme vám jednoduchý návod a prístup do aplikácie. Väčšina zákazníkov má všetko hotové do 10 minút. Je to navrhnuté tak, aby to zvládol naozaj každý.</div>
+                    </div>
+                     <div class="faq-item">
+                        <button class="faq-question flex justify-between items-center w-full">
+                            <span>Môžem pridávať fotografie a texty aj neskôr?</span>
+                             <i class="fas fa-chevron-down transition-transform"></i>
+                        </button>
+                        <div class="faq-answer hidden">Áno, samozrejme. Do vašej súkromnej správy máte prístup kedykoľvek, takže obsah môžete meniť a dopĺňať podľa potreby bez akýchkoľvek ďalších poplatkov.</div>
+                    </div>
+                     <div class="faq-item">
+                        <button class="faq-question flex justify-between items-center w-full">
+                            <span>Čo ak sa mi pokazí telefón alebo stratím prístup?</span>
+                             <i class="fas fa-chevron-down transition-transform"></i>
+                        </button>
+                        <div class="faq-answer hidden">Vaše prístupové údaje sú viazané na váš email. Kedykoľvek sa môžete prihlásiť z nového zariadenia. Všetky vaše spomienky zostávajú bezpečne uložené na našich serveroch.</div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question flex justify-between items-center w-full">
+                            <span>Funguje QR kód aj v zahraničí?</span>
+                             <i class="fas fa-chevron-down transition-transform"></i>
+                        </button>
+                        <div class="faq-answer hidden">Áno. QR kód je medzinárodný štandard a funguje na celom svete s akýmkoľvek smartfónom, ktorý má fotoaparát a prístup na internet.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer style="background-color: #0f172a;" class="text-slate-300">
+        <div class="container mx-auto px-6 py-10 text-center">
+            <img src="https://storage.googleapis.com/espomienka/logowhite.png" alt="eSPOMIENKA Biele Logo" class="h-14 mx-auto mb-4" onerror="this.style.display='none'">
+            <h4 class="text-2xl font-bold text-white mb-2" style="font-family: 'Playfair Display', serif;">eSPOMIENKA</h4>
+            <p class="mb-6">Pretože spomienky si zaslúžia zostať navždy.</p>
+            <div class="text-slate-400 text-base">
+                &copy; 2025 eSPOMIENKA. Všetky práva vyhradené.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800, // Animation duration
+            once: true,    // Whether animation should happen only once
+            offset: 50,    // Offset (in px) from the original trigger point
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navLinks = document.querySelectorAll('#mobile-menu a');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // FAQ Accordion
+        const faqContainer = document.getElementById('faq-container');
+        if (faqContainer) {
+            faqContainer.addEventListener('click', (e) => {
+                const questionButton = e.target.closest('.faq-question');
+                if (questionButton) {
+                    const answer = questionButton.nextElementSibling;
+                    const icon = questionButton.querySelector('i');
+                    
+                    answer.classList.toggle('hidden');
+                    icon.classList.toggle('rotate-180');
+                }
+            });
+        }
+
+        // Hero Carousel
+        const slider = document.getElementById('hero-slider');
+        if (slider) {
+            const slides = slider.querySelectorAll('.hero-slide');
+            let currentSlide = 0;
+            const slideInterval = 5000; // 5 seconds
+
+            function nextSlide() {
+                if(slides.length > 0) {
+                    slides[currentSlide].classList.remove('active');
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    slides[currentSlide].classList.add('active');
+                }
+            }
+
+            setInterval(nextSlide, slideInterval);
+        }
+    </script>
+</body>
+</html>
